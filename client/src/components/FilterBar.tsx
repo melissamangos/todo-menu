@@ -98,13 +98,12 @@ export function FilterBar({
           </span>
           <button
             onClick={onClear}
-            className="text-accent-light"
+            className="text-accent-light text-caption"
             style={{
               background: "none",
               border: "none",
               cursor: "pointer",
               fontFamily: "var(--font-body)",
-              fontSize: 12,
               fontWeight: 500,
               padding: "2px 6px",
               borderRadius: 6,

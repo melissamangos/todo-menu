@@ -61,7 +61,7 @@ export function AddTodoForm({ onAdd }: Props) {
           onFocus={() => setIsExpanded(true)}
           onChange={(e) => setName(e.target.value)}
           placeholder="What do you want to do?"
-          className="field w-full px-4 py-3 mb-4 text-[15px]"
+          className="field w-full px-4 py-3 mb-4 text-title"
         />
 
         {isExpanded && (
@@ -132,7 +132,7 @@ export function AddTodoForm({ onAdd }: Props) {
                   setName("");
                   setBoons([]);
                 }}
-                className="rounded-[10px] border border-line px-4 py-2.5 bg-transparent text-ink-faint font-body text-[13px] cursor-pointer"
+                className="rounded-[10px] border border-line px-4 py-2.5 bg-transparent text-ink-faint font-body text-body cursor-pointer"
               >
                 Cancel
               </button>
