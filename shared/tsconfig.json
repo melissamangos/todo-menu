@@ -10,7 +10,8 @@
     "declarationMap": true,
     "sourceMap": true,
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "noEmitOnError": true
   },
   "include": ["types/**/*"],
   "exclude": ["node_modules", "dist"]

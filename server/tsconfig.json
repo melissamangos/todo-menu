@@ -12,7 +12,7 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "paths": {
-      "@todo-menu/shared": ["../shared/types/index"]
+      "@todo-menu/shared": ["../shared/dist/index"]
     }
   },
   "include": ["src/**/*"],
