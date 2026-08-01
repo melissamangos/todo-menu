@@ -1,0 +1,31 @@
+/*
+ * Primitive tokens — raw palette values only. No intent, no meaning.
+ * Consumed exclusively by tokens/semantic.css; nothing else should
+ * reference these directly.
+ */
+:root {
+  /* Violet-tinted ink scale (backgrounds) */
+  --color-ink-950: #0d0b14;
+  --color-ink-900: #15111f;
+  --color-ink-800: #1a1528;
+  --color-ink-700: #1e1830;
+
+  /* Text scale */
+  --color-slate-100: #e2e8f0;
+  --color-slate-400: #94a3b8;
+  --color-slate-500: #64748b;
+
+  /* Accent + status hues */
+  --color-violet-400: #a78bfa;
+  --color-violet-500: #8b5cf6;
+  --color-violet-600: #7c3aed;
+  --color-teal-400: #2dd4bf;
+  --color-pink-400: #f472b6;
+  --color-amber-400: #fbbf24;
+  --color-blue-400: #60a5fa;
+  --color-purple-400: #c084fc;
+
+  /* Typography */
+  --font-serif: "DM Serif Display", Georgia, serif;
+  --font-sans: "DM Sans", system-ui, sans-serif;
+}

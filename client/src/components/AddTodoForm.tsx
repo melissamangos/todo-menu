@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { CreateTodoDto, EnergyCost, Timeslot, Boon, ALL_BOONS } from "@todo-menu/shared";
+import styles from "./AddTodoForm.module.scss";
 
 interface Props {
   onAdd: (dto: CreateTodoDto) => Promise<void>;
@@ -16,6 +17,10 @@ const SLOT_OPTIONS: { value: Timeslot; label: string; icon: string }[] = [
   { value: "pm",  label: "Afternoon", icon: "🌤️" },
   { value: "eve", label: "Evening", icon: "🌙" },
 ];
+
+function optionClass(isActive: boolean): string {
+  return [styles.option, isActive && styles.active].filter(Boolean).join(" ");
+}
 
 export function AddTodoForm({ onAdd }: Props) {
   const [name, setName] = useState("");
@@ -56,8 +61,7 @@ export function AddTodoForm({ onAdd }: Props) {
           onFocus={() => setIsExpanded(true)}
           onChange={(e) => setName(e.target.value)}
           placeholder="What do you want to do?"
-          className="field w-full px-4 py-3 mb-4"
-          style={{ fontSize: 15 }}
+          className="field w-full px-4 py-3 mb-4 text-[15px]"
         />
 
         {isExpanded && (
@@ -65,26 +69,14 @@ export function AddTodoForm({ onAdd }: Props) {
             {/* Energy Cost */}
             <div className="mb-4">
               <p className="section-label mb-2">Energy cost</p>
-              <div style={{ display: "flex", gap: 8 }}>
+              <div className="flex gap-2">
                 {ENERGY_OPTIONS.map((opt) => (
                   <button
                     key={opt.value}
                     type="button"
                     onClick={() => setEnergyCost(opt.value)}
-                    style={{
-                      flex: 1,
-                      padding: "8px 0",
-                      borderRadius: 10,
-                      border: `1px solid ${energyCost === opt.value ? opt.color : "var(--border-subtle)"}`,
-                      background: energyCost === opt.value ? `color-mix(in srgb, ${opt.color} 12%, transparent)` : "var(--bg-elevated)",
-                      color: energyCost === opt.value ? opt.color : "var(--slate-light)",
-                      fontFamily: "var(--font-body)",
-                      fontSize: 13,
-                      fontWeight: 500,
-                      cursor: "pointer",
-                      transition: "all 0.15s ease",
-                      boxShadow: energyCost === opt.value ? `0 0 12px color-mix(in srgb, ${opt.color} 20%, transparent)` : "none",
-                    }}
+                    className={optionClass(energyCost === opt.value)}
+                    style={{ "--accent": opt.color } as React.CSSProperties}
                   >
                     {opt.label}
                   </button>
@@ -95,27 +87,15 @@ export function AddTodoForm({ onAdd }: Props) {
             {/* Timeslot */}
             <div className="mb-4">
               <p className="section-label mb-2">Timeslot</p>
-              <div style={{ display: "flex", gap: 8 }}>
+              <div className="flex gap-2">
                 {SLOT_OPTIONS.map((opt) => (
                   <button
                     key={opt.value}
                     type="button"
                     onClick={() => setTimeslot(opt.value)}
-                    style={{
-                      flex: 1,
-                      padding: "8px 0",
-                      borderRadius: 10,
-                      border: `1px solid ${timeslot === opt.value ? "var(--violet)" : "var(--border-subtle)"}`,
-                      background: timeslot === opt.value ? "var(--violet-dim)" : "var(--bg-elevated)",
-                      color: timeslot === opt.value ? "var(--violet-light)" : "var(--slate-light)",
-                      fontFamily: "var(--font-body)",
-                      fontSize: 13,
-                      fontWeight: 500,
-                      cursor: "pointer",
-                      transition: "all 0.15s ease",
-                    }}
+                    className={optionClass(timeslot === opt.value)}
                   >
-                    <span style={{ marginRight: 4 }}>{opt.icon}</span>{opt.label}
+                    <span className="mr-1">{opt.icon}</span>{opt.label}
                   </button>
                 ))}
               </div>
@@ -123,8 +103,8 @@ export function AddTodoForm({ onAdd }: Props) {
 
             {/* Boons */}
             <div className="mb-5">
-              <p className="section-label mb-2">Boons {boons.length > 0 && <span style={{ color: "var(--violet-light)", marginLeft: 6 }}>({boons.length})</span>}</p>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+              <p className="section-label mb-2">Boons {boons.length > 0 && <span className="text-accent-light ml-1.5">({boons.length})</span>}</p>
+              <div className="flex flex-wrap gap-1.5">
                 {ALL_BOONS.map((b) => (
                   <button
                     key={b}
@@ -138,28 +118,18 @@ export function AddTodoForm({ onAdd }: Props) {
               </div>
             </div>
 
-            <div style={{ display: "flex", gap: 8 }}>
+            <div className="flex gap-2">
               <button
                 type="button"
                 onClick={() => { setIsExpanded(false); setName(""); setBoons([]); }}
-                style={{
-                  padding: "10px 16px",
-                  borderRadius: 10,
-                  border: "1px solid var(--border-subtle)",
-                  background: "transparent",
-                  color: "var(--slate-muted)",
-                  fontFamily: "var(--font-body)",
-                  fontSize: 13,
-                  cursor: "pointer",
-                }}
+                className="rounded-[10px] border border-line px-4 py-2.5 bg-transparent text-ink-faint font-body text-[13px] cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSubmit}
                 disabled={isSubmitting || !name.trim()}
-                className="btn-primary"
-                style={{ flex: 1, padding: "10px 0" }}
+                className="btn-primary flex-1 py-2.5 px-0"
               >
                 {isSubmitting ? "Adding…" : "Add to menu"}
               </button>

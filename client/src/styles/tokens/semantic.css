@@ -1,0 +1,50 @@
+/*
+ * Semantic tokens — intent-based aliases over primitives.css.
+ *
+ * These custom-property names are the public API: existing global
+ * classes (.card, .filter-pill, .btn-primary, .chip, .boon-tag,
+ * .field) and not-yet-migrated components consume them by name, so
+ * renaming any of these requires updating every consumer.
+ */
+:root {
+  /* Surfaces */
+  --bg-base: var(--color-ink-950);
+  --bg-surface: var(--color-ink-900);
+  --bg-elevated: var(--color-ink-700);
+  --bg-card: var(--color-ink-800);
+
+  /* Borders */
+  --border-subtle: color-mix(in srgb, var(--color-violet-500) 12%, transparent);
+  --border-muted: color-mix(in srgb, var(--color-violet-500) 22%, transparent);
+  --border-accent: color-mix(in srgb, var(--color-violet-500) 50%, transparent);
+
+  /* Accent + text */
+  --violet: var(--color-violet-500);
+  --violet-light: var(--color-violet-400);
+  --violet-dim: color-mix(in srgb, var(--color-violet-500) 15%, transparent);
+  --teal: var(--color-teal-400);
+  --teal-dim: color-mix(in srgb, var(--color-teal-400) 12%, transparent);
+  --slate-light: var(--color-slate-400);
+  --slate-muted: var(--color-slate-500);
+  --text-primary: var(--color-slate-100);
+
+  /* Energy cost */
+  --energy-low: var(--color-teal-400);
+  --energy-low-bg: color-mix(in srgb, var(--color-teal-400) 10%, transparent);
+  --energy-med: var(--color-violet-400);
+  --energy-med-bg: color-mix(in srgb, var(--color-violet-400) 10%, transparent);
+  --energy-high: var(--color-pink-400);
+  --energy-high-bg: color-mix(in srgb, var(--color-pink-400) 10%, transparent);
+
+  /* Timeslot */
+  --slot-am: var(--color-amber-400);
+  --slot-am-bg: color-mix(in srgb, var(--color-amber-400) 10%, transparent);
+  --slot-pm: var(--color-blue-400);
+  --slot-pm-bg: color-mix(in srgb, var(--color-blue-400) 10%, transparent);
+  --slot-eve: var(--color-purple-400);
+  --slot-eve-bg: color-mix(in srgb, var(--color-purple-400) 10%, transparent);
+
+  /* Typography */
+  --font-display: var(--font-serif);
+  --font-body: var(--font-sans);
+}

@@ -1,6 +1,6 @@
 # Todo Menu
 
-A full-stack wellness-focused to-do application built with TypeScript, React, Tailwind CSS, and Node.js/Express. Structured as an npm workspace monorepo with clean separation between client, server, and shared types.
+A full-stack wellness-focused to-do application built with TypeScript, React, Tailwind CSS, SCSS Modules, and Node.js/Express. Structured as an npm workspace monorepo with clean separation between client, server, and shared types.
 
 ---
 
@@ -8,7 +8,7 @@ A full-stack wellness-focused to-do application built with TypeScript, React, Ta
 
 | Layer    | Technology                                    |
 | -------- | --------------------------------------------- |
-| Frontend | React 18, TypeScript, Vite, Tailwind CSS      |
+| Frontend | React 18, TypeScript, Vite, Tailwind CSS, SCSS Modules |
 | Backend  | Node.js, Express, TypeScript                  |
 | Shared   | TypeScript types shared across client/server  |
 | Testing  | Vitest (client), Jest + Supertest (server)    |
@@ -51,12 +51,17 @@ todo-menu/
     ├── src/
     │   ├── App.tsx
     │   ├── components/
-    │   │   ├── AddTodoForm.tsx  # Expandable form: energy / timeslot / boons
-    │   │   ├── FilterBar.tsx    # Filter pills with active state banner
-    │   │   └── TodoList.tsx     # Grouped by energy cost, animated cards
+    │   │   ├── AddTodoForm.tsx          # Expandable form: energy / timeslot / boons
+    │   │   ├── AddTodoForm.module.scss  # Component-scoped styles for the segmented option buttons
+    │   │   ├── FilterBar.tsx            # Filter pills with active state banner
+    │   │   └── TodoList.tsx             # Grouped by energy cost, animated cards
     │   ├── hooks/useTodos.ts    # Fetch + client-side filter (useMemo) + state
     │   ├── services/todo.api.ts # Typed fetch wrapper
-    │   └── styles/index.css    # Full CSS design system (variables, tokens, animations)
+    │   └── styles/
+    │       ├── index.css            # Global styles, animations, and shared classes (.card, .btn-primary, etc.)
+    │       └── tokens/
+    │           ├── primitives.css   # Raw palette values (colors, font stacks)
+    │           └── semantic.css     # Intent-based aliases over primitives — the public token API
     └── package.json
 ```
 
@@ -142,6 +147,16 @@ Routes → Controller → Service → Repository
 ### Shared types
 
 `@todo-menu/shared` is the single source of truth for `Todo`, `CreateTodoDto`, `UpdateTodoDto`, `TodoFilters`, `Boon`, `EnergyCost`, and `Timeslot`. Both workspaces import from it for end-to-end type safety on the API contract.
+
+### Design tokens: primitive → semantic → component
+
+Styling tokens live in three layers, all expressed as CSS custom properties:
+
+- **Primitive** (`styles/tokens/primitives.css`) — raw palette values only (e.g. `--color-violet-500`, `--color-teal-400`), no meaning attached.
+- **Semantic** (`styles/tokens/semantic.css`) — intent-based aliases over primitives (e.g. `--accent: var(--color-violet-500)`, `--energy-low: var(--color-teal-400)`). These names are the public API — `tailwind.config.js` points its theme colors at them, and existing global classes (`.card`, `.filter-pill`, `.btn-primary`, `.boon-tag`) consume them by name.
+- **Component** — CSS custom properties scoped to an individual component's SCSS Module, used only where a value is genuinely local (see `AddTodoForm.module.scss`'s `--accent` override, set per-option in JSX for the energy/timeslot segmented buttons).
+
+Tailwind utility classes handle most day-to-day styling (layout, spacing, colors via the token-backed theme); SCSS Modules are reserved for styling that doesn't fit cleanly into utility classes, such as the dynamic per-option active state on `AddTodoForm`'s segmented buttons.
 
 ---
 

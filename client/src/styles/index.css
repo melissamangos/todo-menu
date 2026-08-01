@@ -1,43 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap');
+@import './tokens/primitives.css';
+@import './tokens/semantic.css';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-:root {
-  --bg-base:        #0d0b14;
-  --bg-surface:     #15111f;
-  --bg-elevated:    #1e1830;
-  --bg-card:        #1a1528;
-  --border-subtle:  rgba(139, 92, 246, 0.12);
-  --border-muted:   rgba(139, 92, 246, 0.22);
-  --border-accent:  rgba(139, 92, 246, 0.5);
-
-  --violet:         #8b5cf6;
-  --violet-light:   #a78bfa;
-  --violet-dim:     rgba(139, 92, 246, 0.15);
-  --teal:           #2dd4bf;
-  --teal-dim:       rgba(45, 212, 191, 0.12);
-  --slate-light:    #94a3b8;
-  --slate-muted:    #64748b;
-
-  --energy-low:     #2dd4bf;
-  --energy-low-bg:  rgba(45, 212, 191, 0.1);
-  --energy-med:     #a78bfa;
-  --energy-med-bg:  rgba(167, 139, 250, 0.1);
-  --energy-high:    #f472b6;
-  --energy-high-bg: rgba(244, 114, 182, 0.1);
-
-  --slot-am:        #fbbf24;
-  --slot-am-bg:     rgba(251, 191, 36, 0.1);
-  --slot-pm:        #60a5fa;
-  --slot-pm-bg:     rgba(96, 165, 250, 0.1);
-  --slot-eve:       #c084fc;
-  --slot-eve-bg:    rgba(192, 132, 252, 0.1);
-
-  --font-display:   'DM Serif Display', Georgia, serif;
-  --font-body:      'DM Sans', system-ui, sans-serif;
-}
 
 *, *::before, *::after { box-sizing: border-box; }
 
