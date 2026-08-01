@@ -44,15 +44,17 @@ export function FilterBar({
               key={p.value}
               onClick={() => onSetFilters({ energyCost: p.value })}
               className={`filter-pill${isActive ? " active" : ""}`}
+              // Feeds .filter-pill.active's --pill-accent/-tint/-glow custom
+              // properties (see index.css) — lets this specific pill tint
+              // itself without a specificity fight against that shared rule.
               style={
-                isActive && p.color
-                  ? {
-                      borderColor: p.color,
-                      color: p.color,
-                      background: `color-mix(in srgb, ${p.color} 12%, transparent)`,
-                      boxShadow: `0 0 10px color-mix(in srgb, ${p.color} 18%, transparent)`,
-                    }
-                  : {}
+                p.color
+                  ? ({
+                      "--pill-accent": p.color,
+                      "--pill-tint": `color-mix(in srgb, ${p.color} 12%, transparent)`,
+                      "--pill-glow": `color-mix(in srgb, ${p.color} 18%, transparent)`,
+                    } as React.CSSProperties)
+                  : undefined
               }
             >
               {p.color && (
@@ -91,15 +93,15 @@ export function FilterBar({
       {isFiltered && (
         <div className="filter-banner mt-3 animate-in">
           <span>
-            Showing <strong style={{ color: "white" }}>{filteredCount}</strong> of{" "}
-            <strong style={{ color: "white" }}>{totalCount}</strong> items
+            Showing <strong className="text-white">{filteredCount}</strong> of{" "}
+            <strong className="text-white">{totalCount}</strong> items
           </span>
           <button
             onClick={onClear}
+            className="text-accent-light"
             style={{
               background: "none",
               border: "none",
-              color: "var(--violet-light)",
               cursor: "pointer",
               fontFamily: "var(--font-body)",
               fontSize: 12,
