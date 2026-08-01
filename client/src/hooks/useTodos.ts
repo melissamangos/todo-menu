@@ -37,7 +37,9 @@ export function useTodos(): UseTodosReturn {
     }
   }, []);
 
-  useEffect(() => { fetchTodos(); }, [fetchTodos]);
+  useEffect(() => {
+    fetchTodos();
+  }, [fetchTodos]);
 
   // Client-side filtering + sort by energy cost (low → medium → high)
   const filteredTodos = useMemo(() => {

@@ -55,7 +55,11 @@ describe("App — sort order", () => {
 
     await screen.findByText(TODO_HIGH_PM.name);
 
-    const [lowIdx, medIdx, highIdx] = orderOf([TODO_LOW_AM.name, TODO_MED_AM.name, TODO_HIGH_PM.name]);
+    const [lowIdx, medIdx, highIdx] = orderOf([
+      TODO_LOW_AM.name,
+      TODO_MED_AM.name,
+      TODO_HIGH_PM.name,
+    ]);
     expect(lowIdx).toBeLessThan(medIdx);
     expect(medIdx).toBeLessThan(highIdx);
   });
@@ -190,7 +194,13 @@ describe("App — clear filters", () => {
 describe("App — create flow", () => {
   it("adds a new item to the list after submitting the form", async () => {
     vi.mocked(todoApi.getAll).mockResolvedValue([]);
-    const created = makeTodo({ id: "99", name: "Yoga", energyCost: "low", timeslot: "am", boons: [] });
+    const created = makeTodo({
+      id: "99",
+      name: "Yoga",
+      energyCost: "low",
+      timeslot: "am",
+      boons: [],
+    });
     vi.mocked(todoApi.create).mockResolvedValue(created);
     render(<App />);
     await waitFor(() => expect(todoApi.getAll).toHaveBeenCalled());

@@ -18,7 +18,7 @@ export class InMemoryTodoRepository implements ITodoRepository {
 
   async findAll(): Promise<Todo[]> {
     return Array.from(this.store.values()).sort(
-      (a, b) => ENERGY_ORDER[a.energyCost] - ENERGY_ORDER[b.energyCost]
+      (a, b) => ENERGY_ORDER[a.energyCost] - ENERGY_ORDER[b.energyCost],
     );
   }
 

@@ -29,6 +29,5 @@ export const todoApi = {
   update: (id: string, dto: UpdateTodoDto): Promise<Todo> =>
     request<Todo>(`${BASE_URL}/${id}`, { method: "PATCH", body: JSON.stringify(dto) }),
 
-  delete: (id: string): Promise<void> =>
-    request<void>(`${BASE_URL}/${id}`, { method: "DELETE" }),
+  delete: (id: string): Promise<void> => request<void>(`${BASE_URL}/${id}`, { method: "DELETE" }),
 };

@@ -81,7 +81,7 @@ describe("AddTodoForm — defaults", () => {
     await fillNameAndSubmit("Morning walk");
 
     expect(onAdd).toHaveBeenCalledWith(
-      expect.objectContaining({ energyCost: "low", timeslot: "am" })
+      expect.objectContaining({ energyCost: "low", timeslot: "am" }),
     );
   });
 });
@@ -143,7 +143,7 @@ describe("AddTodoForm — boon selection", () => {
     await fillNameAndSubmit("Evening walk");
 
     expect(onAdd).toHaveBeenCalledWith(
-      expect.objectContaining({ boons: ["mindfulness", "nature"] })
+      expect.objectContaining({ boons: ["mindfulness", "nature"] }),
     );
   });
 
@@ -198,10 +198,10 @@ describe("AddTodoForm — submission", () => {
 
     expect(onAdd).toHaveBeenCalledOnce();
     expect(onAdd).toHaveBeenCalledWith({
-      name:       "Evening yoga",
+      name: "Evening yoga",
       energyCost: "high",
-      timeslot:   "eve",
-      boons:      ["mindfulness", "routine"],
+      timeslot: "eve",
+      boons: ["mindfulness", "routine"],
     });
   });
 
@@ -212,13 +212,11 @@ describe("AddTodoForm — submission", () => {
 
     await userEvent.type(
       screen.getByPlaceholderText(/what do you want to do/i),
-      "  Walk the dog  "
+      "  Walk the dog  ",
     );
     await userEvent.click(screen.getByRole("button", { name: /add to menu/i }));
 
-    expect(onAdd).toHaveBeenCalledWith(
-      expect.objectContaining({ name: "Walk the dog" })
-    );
+    expect(onAdd).toHaveBeenCalledWith(expect.objectContaining({ name: "Walk the dog" }));
   });
 
   it("resets and collapses the form after successful submission", async () => {

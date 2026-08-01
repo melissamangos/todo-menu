@@ -6,12 +6,12 @@ A full-stack wellness-focused to-do application built with TypeScript, React, Ta
 
 ## Tech Stack
 
-| Layer    | Technology                                    |
-| -------- | --------------------------------------------- |
+| Layer    | Technology                                             |
+| -------- | ------------------------------------------------------ |
 | Frontend | React 18, TypeScript, Vite, Tailwind CSS, SCSS Modules |
-| Backend  | Node.js, Express, TypeScript                  |
-| Shared   | TypeScript types shared across client/server  |
-| Testing  | Vitest (client), Jest + Supertest (server)    |
+| Backend  | Node.js, Express, TypeScript                           |
+| Shared   | TypeScript types shared across client/server           |
+| Testing  | Vitest (client), Jest + Supertest (server)             |
 
 ---
 
@@ -96,6 +96,7 @@ npm run dev
 ```
 
 Starts:
+
 - **Server** → `http://localhost:3001` (hot-reload via `ts-node-dev`)
 - **Client** → `http://localhost:5173` (Vite; `/api` proxied to server)
 
@@ -124,6 +125,21 @@ npm run test                           # All workspaces
 npm run test --workspace=server        # Jest
 npm run test --workspace=client        # Vitest
 ```
+
+---
+
+## Linting & Formatting
+
+A single root-level [ESLint](eslint.config.mjs) flat config and [Prettier](.prettierrc.json) config cover `shared`, `server`, and `client` — there's no per-workspace lint setup.
+
+```bash
+npm run lint            # ESLint across the whole repo
+npm run lint:fix        # ESLint, auto-fixing what it can
+npm run format          # Prettier, writes formatting changes
+npm run format:check    # Prettier, fails if anything is unformatted
+```
+
+A pre-commit hook (Husky + lint-staged) runs ESLint and Prettier on staged files automatically before each commit.
 
 ---
 
