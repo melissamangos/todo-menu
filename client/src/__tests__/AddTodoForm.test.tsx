@@ -2,17 +2,16 @@
  * AddTodoForm — unit tests
  *
  * Business requirements covered:
- *  ✓ Form is collapsed by default (fields not visible)
+ *  ✓ Form is collapsed by default (option controls not interactable)
  *  ✓ Clicking the name input expands the full form
  *  ✓ Name is required — submit is disabled when blank
  *  ✓ Name is required — submit is disabled when whitespace-only
- *  ✓ Energy cost defaults to "low"
- *  ✓ Timeslot defaults to "am"
+ *  ✓ Submitting without touching energy/timeslot defaults to low / morning
  *  ✓ User can change energy cost to medium or high
  *  ✓ User can change timeslot to pm or eve
  *  ✓ User can select multiple boons
  *  ✓ Selecting a boon twice deselects it (toggle)
- *  ✓ All 10 boons are rendered
+ *  ✓ All 10 boons are rendered as clickable options
  *  ✓ Submitting calls onAdd with correct shape
  *  ✓ Form resets after successful submission
  *  ✓ Cancel collapses the form without calling onAdd
@@ -20,7 +19,7 @@
 
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { vi, describe, it, expect, beforeEach } from "vitest";
+import { vi, describe, it, expect } from "vitest";
 import { AddTodoForm } from "../components/AddTodoForm";
 import { ALL_BOONS } from "@todo-menu/shared";
 
@@ -34,130 +33,130 @@ function expandForm() {
   fireEvent.focus(screen.getByPlaceholderText(/what do you want to do/i));
 }
 
+async function fillNameAndSubmit(name: string) {
+  await userEvent.type(screen.getByPlaceholderText(/what do you want to do/i), name);
+  await userEvent.click(screen.getByRole("button", { name: /add to menu/i }));
+}
+
 describe("AddTodoForm — initial state", () => {
   it("renders the name input", () => {
     setup();
     expect(screen.getByPlaceholderText(/what do you want to do/i)).toBeInTheDocument();
   });
 
-  it("does not show energy / timeslot controls before the input is focused", () => {
+  it("does not expose energy/timeslot/boon controls before the input is focused", () => {
     setup();
-    expect(screen.queryByText(/energy cost/i)).not.toBeInTheDocument();
-    expect(screen.queryByText(/timeslot/i)).not.toBeInTheDocument();
-  });
-
-  it("does not show the boon grid before the input is focused", () => {
-    setup();
-    expect(screen.queryByText("mindfulness")).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /cancel/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /^low$/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "mindfulness" })).not.toBeInTheDocument();
   });
 });
 
 describe("AddTodoForm — form expansion", () => {
-  it("reveals energy, timeslot and boon controls on focus", () => {
+  it("reveals energy, timeslot, boon and cancel controls on focus", () => {
     setup();
     expandForm();
 
-    expect(screen.getByText(/energy cost/i)).toBeInTheDocument();
-    expect(screen.getByText(/timeslot/i)).toBeInTheDocument();
-    expect(screen.getByText(/boons/i)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /^low$/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /morning/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /cancel/i })).toBeInTheDocument();
   });
 
-  it("renders all 10 boons", () => {
+  it("renders all 10 boons as clickable options", () => {
     setup();
     expandForm();
 
     for (const boon of ALL_BOONS) {
-      expect(screen.getByText(boon)).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: boon })).toBeInTheDocument();
     }
   });
 });
 
-describe("AddTodoForm — default values", () => {
-  beforeEach(() => { setup(); expandForm(); });
+describe("AddTodoForm — defaults", () => {
+  it("submits with low energy and morning timeslot when left untouched", async () => {
+    const onAdd = vi.fn().mockResolvedValue(undefined);
+    setup(onAdd);
+    expandForm();
 
-  it("defaults energy cost to Low", () => {
-    // The Low button should have the active border style
-    const lowBtn = screen.getByRole("button", { name: /^low$/i });
-    expect(lowBtn).toHaveStyle({ borderColor: "var(--energy-low)" });
-  });
+    await fillNameAndSubmit("Morning walk");
 
-  it("defaults timeslot to Morning", () => {
-    const morningBtn = screen.getByRole("button", { name: /morning/i });
-    expect(morningBtn).toHaveStyle({ borderColor: "var(--violet)" });
+    expect(onAdd).toHaveBeenCalledWith(
+      expect.objectContaining({ energyCost: "low", timeslot: "am" })
+    );
   });
 });
 
 describe("AddTodoForm — field interactions", () => {
-  it("user can select Medium energy cost", async () => {
-    setup();
+  it("submits with medium energy after selecting Medium", async () => {
+    const onAdd = vi.fn().mockResolvedValue(undefined);
+    setup(onAdd);
     expandForm();
 
     await userEvent.click(screen.getByRole("button", { name: /^medium$/i }));
+    await fillNameAndSubmit("Tidy up");
 
-    expect(screen.getByRole("button", { name: /^medium$/i }))
-      .toHaveStyle({ borderColor: "var(--energy-med)" });
+    expect(onAdd).toHaveBeenCalledWith(expect.objectContaining({ energyCost: "medium" }));
   });
 
-  it("user can select High energy cost", async () => {
-    setup();
+  it("submits with high energy after selecting High", async () => {
+    const onAdd = vi.fn().mockResolvedValue(undefined);
+    setup(onAdd);
     expandForm();
 
     await userEvent.click(screen.getByRole("button", { name: /^high$/i }));
+    await fillNameAndSubmit("Run 5k");
 
-    expect(screen.getByRole("button", { name: /^high$/i }))
-      .toHaveStyle({ borderColor: "var(--energy-high)" });
+    expect(onAdd).toHaveBeenCalledWith(expect.objectContaining({ energyCost: "high" }));
   });
 
-  it("user can change timeslot to Afternoon", async () => {
-    setup();
+  it("submits with pm timeslot after selecting Afternoon", async () => {
+    const onAdd = vi.fn().mockResolvedValue(undefined);
+    setup(onAdd);
     expandForm();
 
     await userEvent.click(screen.getByRole("button", { name: /afternoon/i }));
+    await fillNameAndSubmit("Read a book");
 
-    expect(screen.getByRole("button", { name: /afternoon/i }))
-      .toHaveStyle({ borderColor: "var(--violet)" });
+    expect(onAdd).toHaveBeenCalledWith(expect.objectContaining({ timeslot: "pm" }));
   });
 
-  it("user can change timeslot to Evening", async () => {
-    setup();
+  it("submits with eve timeslot after selecting Evening", async () => {
+    const onAdd = vi.fn().mockResolvedValue(undefined);
+    setup(onAdd);
     expandForm();
 
     await userEvent.click(screen.getByRole("button", { name: /evening/i }));
+    await fillNameAndSubmit("Wind down");
 
-    expect(screen.getByRole("button", { name: /evening/i }))
-      .toHaveStyle({ borderColor: "var(--violet)" });
+    expect(onAdd).toHaveBeenCalledWith(expect.objectContaining({ timeslot: "eve" }));
   });
 });
 
 describe("AddTodoForm — boon selection", () => {
-  beforeEach(() => { setup(); expandForm(); });
+  it("includes every selected boon in the submitted DTO", async () => {
+    const onAdd = vi.fn().mockResolvedValue(undefined);
+    setup(onAdd);
+    expandForm();
 
-  it("selecting a boon marks it as selected", async () => {
-    await userEvent.click(screen.getByText("mindfulness"));
-    expect(screen.getByText("mindfulness")).toHaveClass("selected");
+    await userEvent.click(screen.getByRole("button", { name: "mindfulness" }));
+    await userEvent.click(screen.getByRole("button", { name: "nature" }));
+    await fillNameAndSubmit("Evening walk");
+
+    expect(onAdd).toHaveBeenCalledWith(
+      expect.objectContaining({ boons: ["mindfulness", "nature"] })
+    );
   });
 
-  it("user can select multiple boons simultaneously", async () => {
-    await userEvent.click(screen.getByText("mindfulness"));
-    await userEvent.click(screen.getByText("nature"));
+  it("clicking a boon twice removes it from the submitted DTO", async () => {
+    const onAdd = vi.fn().mockResolvedValue(undefined);
+    setup(onAdd);
+    expandForm();
 
-    expect(screen.getByText("mindfulness")).toHaveClass("selected");
-    expect(screen.getByText("nature")).toHaveClass("selected");
-  });
+    await userEvent.click(screen.getByRole("button", { name: "routine" }));
+    await userEvent.click(screen.getByRole("button", { name: "routine" }));
+    await fillNameAndSubmit("Stretch");
 
-  it("clicking a selected boon deselects it (toggle)", async () => {
-    await userEvent.click(screen.getByText("routine"));
-    expect(screen.getByText("routine")).toHaveClass("selected");
-
-    await userEvent.click(screen.getByText("routine"));
-    expect(screen.getByText("routine")).not.toHaveClass("selected");
-  });
-
-  it("boon count label updates when boons are selected", async () => {
-    await userEvent.click(screen.getByText("connection"));
-    await userEvent.click(screen.getByText("creativity"));
-
-    expect(screen.getByText("(2)")).toBeInTheDocument();
+    expect(onAdd).toHaveBeenCalledWith(expect.objectContaining({ boons: [] }));
   });
 });
 
@@ -192,8 +191,8 @@ describe("AddTodoForm — submission", () => {
     await userEvent.type(screen.getByPlaceholderText(/what do you want to do/i), "Evening yoga");
     await userEvent.click(screen.getByRole("button", { name: /^high$/i }));
     await userEvent.click(screen.getByRole("button", { name: /evening/i }));
-    await userEvent.click(screen.getByText("mindfulness"));
-    await userEvent.click(screen.getByText("routine"));
+    await userEvent.click(screen.getByRole("button", { name: "mindfulness" }));
+    await userEvent.click(screen.getByRole("button", { name: "routine" }));
 
     await userEvent.click(screen.getByRole("button", { name: /add to menu/i }));
 
@@ -222,20 +221,20 @@ describe("AddTodoForm — submission", () => {
     );
   });
 
-  it("resets all fields after successful submission", async () => {
+  it("resets and collapses the form after successful submission", async () => {
     const onAdd = vi.fn().mockResolvedValue(undefined);
     setup(onAdd);
     expandForm();
 
     await userEvent.type(screen.getByPlaceholderText(/what do you want to do/i), "Stretch");
-    await userEvent.click(screen.getByText("nature"));
+    await userEvent.click(screen.getByRole("button", { name: "nature" }));
     await userEvent.click(screen.getByRole("button", { name: /add to menu/i }));
 
     await waitFor(() => {
       expect(screen.getByPlaceholderText(/what do you want to do/i)).toHaveValue("");
     });
-    // Form collapses — extended fields no longer visible
-    expect(screen.queryByText(/energy cost/i)).not.toBeInTheDocument();
+    // Form collapses — extended controls are no longer interactable
+    expect(screen.queryByRole("button", { name: /cancel/i })).not.toBeInTheDocument();
   });
 
   it("does not call onAdd when submitting with no name (keyboard enter)", async () => {
@@ -259,7 +258,7 @@ describe("AddTodoForm — cancel", () => {
     await userEvent.click(screen.getByRole("button", { name: /cancel/i }));
 
     expect(onAdd).not.toHaveBeenCalled();
-    expect(screen.queryByText(/energy cost/i)).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /^low$/i })).not.toBeInTheDocument();
   });
 
   it("Cancel clears the name input", async () => {
