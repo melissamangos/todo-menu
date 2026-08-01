@@ -9,11 +9,16 @@ interface Props {
   onClear: () => void;
 }
 
-const ENERGY_PILLS: { value: EnergyCost | "all"; label: string; color?: string }[] = [
+const ENERGY_PILLS: {
+  value: EnergyCost | "all";
+  label: string;
+  color?: string;
+  dotClass?: string;
+}[] = [
   { value: "all", label: "All energy" },
-  { value: "low", label: "Low", color: "var(--energy-low)" },
-  { value: "medium", label: "Medium", color: "var(--energy-med)" },
-  { value: "high", label: "High", color: "var(--energy-high)" },
+  { value: "low", label: "Low", color: "var(--energy-low)", dotClass: "bg-energy-low" },
+  { value: "medium", label: "Medium", color: "var(--energy-med)", dotClass: "bg-energy-medium" },
+  { value: "high", label: "High", color: "var(--energy-high)", dotClass: "bg-energy-high" },
 ];
 
 const SLOT_PILLS: { value: Timeslot | "all"; label: string }[] = [
@@ -36,7 +41,7 @@ export function FilterBar({
       <p className="section-label mb-3">Filter</p>
 
       {/* Energy row */}
-      <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 8 }}>
+      <div className="flex gap-1.5 flex-wrap mb-2">
         {ENERGY_PILLS.map((p) => {
           const isActive = filters.energyCost === p.value;
           return (
@@ -57,17 +62,9 @@ export function FilterBar({
                   : undefined
               }
             >
-              {p.color && (
+              {p.dotClass && (
                 <span
-                  style={{
-                    display: "inline-block",
-                    width: 6,
-                    height: 6,
-                    borderRadius: "50%",
-                    background: p.color,
-                    marginRight: 5,
-                    verticalAlign: "middle",
-                  }}
+                  className={`inline-block w-1.5 h-1.5 rounded-full mr-1.5 align-middle ${p.dotClass}`}
                 />
               )}
               {p.label}
@@ -77,7 +74,7 @@ export function FilterBar({
       </div>
 
       {/* Timeslot row */}
-      <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+      <div className="flex gap-1.5 flex-wrap">
         {SLOT_PILLS.map((p) => (
           <button
             key={p.value}
@@ -98,18 +95,7 @@ export function FilterBar({
           </span>
           <button
             onClick={onClear}
-            className="text-accent-light text-caption"
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              fontFamily: "var(--font-body)",
-              fontWeight: 500,
-              padding: "2px 6px",
-              borderRadius: 6,
-              textDecoration: "underline",
-              textUnderlineOffset: 2,
-            }}
+            className="text-accent-light text-caption bg-transparent border-0 cursor-pointer font-body font-medium px-1.5 py-0.5 rounded-md underline underline-offset-2"
           >
             Clear filters
           </button>

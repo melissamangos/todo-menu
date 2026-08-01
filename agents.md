@@ -41,11 +41,13 @@ todo-menu/
 └── client/                   # @todo-menu/client — React SPA
     └── src/
         ├── App.tsx
+        ├── App.module.scss          # One-off values that don't reduce to Tailwind (max-width, letter-spacing, heading line-height/color)
         ├── components/
         │   ├── AddTodoForm.tsx          # Expandable form: energy / timeslot / boons
         │   ├── AddTodoForm.module.scss  # Component-scoped styles for the segmented option buttons
-        │   ├── FilterBar.tsx            # Filter pills with active state banner
-        │   └── TodoList.tsx             # Grouped by energy cost, animated cards
+        │   ├── FilterBar.tsx            # Filter pills with active state banner (pure Tailwind, no module)
+        │   ├── TodoList.tsx             # Grouped by energy cost, animated cards
+        │   └── TodoList.module.scss     # One-off value (card name line-height) that doesn't reduce to Tailwind
         ├── hooks/useTodos.ts    # Fetch + client-side filter (useMemo) + state
         ├── services/todo.api.ts # Typed fetch wrapper
         ├── styles/
@@ -146,7 +148,7 @@ Styling tokens are CSS custom properties in three layers, covering both color an
 - **Semantic** (`styles/tokens/semantic.css`) — intent-based aliases over primitives (`--accent`, `--energy-low`, `--bg-card`, `--font-size-title`, etc.). These names are the stable public API: `tailwind.config.js` maps its theme colors and font sizes to them, and shared global classes (`.card`, `.filter-pill`, `.btn-primary`, `.boon-tag`) consume them by name — renaming a semantic token means updating every consumer. Two semantic names can point at the same primitive without meaning the same thing (`--font-size-heading` and `--font-size-icon` are both `--font-size-lg`) — they rename independently since they describe different roles.
 - **Component** — CSS custom properties scoped to a single use site, added only when a value is genuinely local. Two variants: scoped to a component's SCSS Module (`AddTodoForm.module.scss`'s `--accent`, set inline per-option in JSX — energy buttons pass their own hue, timeslot buttons omit it and fall back to the semantic `--violet`), and scoped to one instance of a _shared global class_ (`.filter-pill.active`'s `--pill-accent`/`-tint`/`-glow` and `.card`'s `--card-accent(-width)` in `index.css`). The latter exists so `FilterBar`'s energy pills and `TodoList`'s `TodoCard` can tint themselves without a CSS specificity fight against the shared rule — no `!important` needed, since it's the same rule reading a parameterized value rather than two rules competing.
 
-Tailwind utility classes (wired to the token-backed theme) handle layout, spacing, and most color/type. SCSS Modules are reserved for styling that doesn't reduce cleanly to utility classes — dynamic per-instance state being the main case. `FilterBar.tsx`, `TodoList.tsx`, and `App.tsx` now use token-backed Tailwind classes for color and font size, but their structural/layout styling (flex, gap, padding, per-item `animationDelay`) is still inline `style` props, not SCSS Modules — a future pass should finish that following the `AddTodoForm` pattern.
+All four components are now fully off inline styles except for values that are genuinely dynamic per-instance (`TodoCard`'s `animationDelay`, the `--accent`/`--pill-accent`/`--card-accent` custom properties above). The rule of thumb: **Tailwind utility classes first** for anything on Tailwind's default scale (layout, spacing, most color/type); **SCSS Modules** for the handful of values per component that don't reduce cleanly to a utility class — `AddTodoForm.module.scss`'s dynamic `.option`/`.active` styling, `TodoList.module.scss`'s one-off `line-height: 1.3` on the card name, and `App.module.scss`'s `max-width`, eyebrow `letter-spacing: 0.18em`, and heading `line-height`/color (`--text-heading`, a new semantic token — this near-white was previously a hardcoded `#f1f5f9` with no matching token). `FilterBar.tsx` needed no module at all — everything in it reduces to Tailwind classes plus the pre-existing `--pill-accent` mechanism. Where a static value was close to but not exactly on Tailwind's spacing scale (e.g. a 5px gap), it was snapped to the nearest scale step rather than kept as an arbitrary-value class — the same small-deliberate-consolidation treatment used for the font-size scale.
 
 ### Linting & formatting
 
@@ -184,4 +186,3 @@ The data layer is currently in-memory and resets on server restart. Suggested ne
 4. Persist filter preferences to `localStorage`
 5. Add drag-and-drop reordering within energy groups
 6. Set up CI/CD with GitHub Actions
-7. Finish migrating `FilterBar.tsx`/`TodoList.tsx`/`App.tsx` structural styling into SCSS Modules (see Design tokens above)

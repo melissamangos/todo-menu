@@ -1,0 +1,15 @@
+// One-off values that don't reduce cleanly to Tailwind utility classes —
+// everything else on these elements is a plain Tailwind class.
+
+.page {
+  max-width: 600px;
+}
+
+.eyebrow {
+  letter-spacing: 0.18em;
+}
+
+.heading {
+  line-height: 1.1;
+  color: var(--text-heading);
+}

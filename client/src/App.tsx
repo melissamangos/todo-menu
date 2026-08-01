@@ -2,6 +2,7 @@ import { useTodos } from "./hooks/useTodos";
 import { TodoList } from "./components/TodoList";
 import { AddTodoForm } from "./components/AddTodoForm";
 import { FilterBar } from "./components/FilterBar";
+import styles from "./App.module.scss";
 
 export default function App() {
   const {
@@ -21,39 +22,15 @@ export default function App() {
     <>
       <div className="glow-orb" />
 
-      <div
-        style={{
-          minHeight: "100vh",
-          padding: "48px 16px 80px",
-          maxWidth: 600,
-          margin: "0 auto",
-          position: "relative",
-          zIndex: 1,
-        }}
-      >
+      <div className={`min-h-screen pt-12 px-4 pb-20 mx-auto relative z-10 ${styles.page}`}>
         {/* Header */}
-        <header style={{ marginBottom: 36 }}>
+        <header className="mb-9">
           <p
-            className="text-accent-light text-caption"
-            style={{
-              fontWeight: 600,
-              letterSpacing: "0.18em",
-              textTransform: "uppercase",
-              marginBottom: 8,
-            }}
+            className={`text-accent-light text-caption font-semibold uppercase mb-2 ${styles.eyebrow}`}
           >
             ✦ Your wellness menu
           </p>
-          <h1
-            className="text-display"
-            style={{
-              fontFamily: "var(--font-display)",
-              fontWeight: 400,
-              color: "#f1f5f9",
-              lineHeight: 1.1,
-              marginBottom: 6,
-            }}
-          >
+          <h1 className={`text-display font-display font-normal mb-1.5 ${styles.heading}`}>
             Today's Menu
           </h1>
           <p className="text-ink-faint text-body">
@@ -65,7 +42,7 @@ export default function App() {
         <AddTodoForm onAdd={createTodo} />
 
         {/* Divider */}
-        <div className="divider" style={{ marginBottom: 24 }} />
+        <div className="divider mb-6" />
 
         {/* Filters */}
         <FilterBar
@@ -79,24 +56,9 @@ export default function App() {
 
         {/* List */}
         {isLoading && (
-          <p
-            className="text-ink-faint text-body"
-            style={{
-              textAlign: "center",
-              padding: "40px 0",
-            }}
-          >
-            Loading your menu…
-          </p>
+          <p className="text-ink-faint text-body text-center py-10">Loading your menu…</p>
         )}
-        {error && (
-          <p
-            className="text-energy-high text-body"
-            style={{ textAlign: "center", padding: "16px 0" }}
-          >
-            {error}
-          </p>
-        )}
+        {error && <p className="text-energy-high text-body text-center py-4">{error}</p>}
         {!isLoading && !error && <TodoList todos={filteredTodos} onDelete={deleteTodo} />}
       </div>
     </>
