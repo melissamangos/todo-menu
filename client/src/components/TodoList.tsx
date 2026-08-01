@@ -54,19 +54,20 @@ export function TodoList({ todos, onDelete }: Props) {
           padding: "48px 0",
         }}
       >
-        <div style={{ fontSize: 36, marginBottom: 12 }}>✦</div>
+        <div className="text-icon-lg" style={{ marginBottom: 12 }}>
+          ✦
+        </div>
         <p
-          className="text-ink-muted"
+          className="text-ink-muted text-heading"
           style={{
             fontFamily: "var(--font-display)",
             fontStyle: "italic",
-            fontSize: 18,
             marginBottom: 4,
           }}
         >
           Your menu is empty
         </p>
-        <p style={{ fontSize: 13 }}>Add your first item above to get started.</p>
+        <p className="text-body">Add your first item above to get started.</p>
       </div>
     );
   }
@@ -92,9 +93,8 @@ export function TodoList({ todos, onDelete }: Props) {
                 }}
               />
               <span
-                className={meta.textClass}
+                className={`${meta.textClass} text-label`}
                 style={{
-                  fontSize: 10,
                   fontWeight: 600,
                   letterSpacing: "0.1em",
                   textTransform: "uppercase",
@@ -103,10 +103,9 @@ export function TodoList({ todos, onDelete }: Props) {
                 {meta.label}
               </span>
               <span
-                className="text-ink-faint"
+                className="text-ink-faint text-caption"
                 style={{
                   marginLeft: "auto",
-                  fontSize: 11,
                 }}
               >
                 {items.length} {items.length === 1 ? "item" : "items"}
@@ -160,10 +159,9 @@ function TodoCard({
         {/* Content */}
         <div style={{ flex: 1, minWidth: 0 }}>
           <p
-            className="text-ink"
+            className="text-ink text-title"
             style={{
               fontFamily: "var(--font-display)",
-              fontSize: 16,
               marginBottom: 8,
               lineHeight: 1.3,
             }}
@@ -197,12 +195,11 @@ function TodoCard({
         <button
           onClick={() => onDelete(todo.id)}
           aria-label="Delete"
-          className="text-ink-faint hover:text-energy-high transition-colors"
+          className="text-ink-faint hover:text-energy-high transition-colors text-icon"
           style={{
             background: "none",
             border: "none",
             cursor: "pointer",
-            fontSize: 18,
             lineHeight: 1,
             padding: "2px 4px",
             borderRadius: 6,

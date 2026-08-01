@@ -28,4 +28,14 @@
   /* Typography */
   --font-serif: "DM Serif Display", Georgia, serif;
   --font-sans: "DM Sans", system-ui, sans-serif;
+
+  /* Type scale (rem, 16px root) — consolidated from the app's original
+     10/11/12/13/14/15/16/18/36px values; adjacent 1px steps were merged
+     into the nearer size below. */
+  --font-size-2xs: 0.625rem; /* 10px */
+  --font-size-xs: 0.75rem; /* 12px — was also used at 11px */
+  --font-size-sm: 0.875rem; /* 14px — was also used at 13px */
+  --font-size-base: 1rem; /* 16px — was also used at 15px */
+  --font-size-lg: 1.125rem; /* 18px */
+  --font-size-3xl: 2.25rem; /* 36px */
 }

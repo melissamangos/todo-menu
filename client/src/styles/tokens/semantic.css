@@ -47,4 +47,18 @@
   /* Typography */
   --font-display: var(--font-serif);
   --font-body: var(--font-sans);
+
+  /* Type scale, by role rather than size — two roles can share a
+     primitive (e.g. heading/icon both use --font-size-lg) without
+     sharing a name, since they mean different things. */
+  --font-size-label: var(--font-size-2xs); /* small uppercase eyebrow/section labels */
+  --font-size-caption: var(--font-size-xs); /* chips, pills, banners, counts */
+  --font-size-body: var(
+    --font-size-sm
+  ); /* standard control/body text: buttons, inputs, paragraphs */
+  --font-size-title: var(--font-size-base); /* prominent item text: todo name, name input */
+  --font-size-heading: var(--font-size-lg); /* small headings, e.g. empty-state message */
+  --font-size-icon: var(--font-size-lg); /* small icon glyphs, e.g. delete button */
+  --font-size-icon-lg: var(--font-size-3xl); /* large decorative icon glyphs */
+  --font-size-display: clamp(2rem, 6vw, 2.75rem); /* main page heading, responsive */
 }

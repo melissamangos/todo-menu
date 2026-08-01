@@ -166,13 +166,13 @@ Routes → Controller → Service → Repository
 
 ### Design tokens: primitive → semantic → component
 
-Styling tokens live in three layers, all expressed as CSS custom properties:
+Styling tokens live in three layers, all expressed as CSS custom properties, covering both color and the type scale:
 
-- **Primitive** (`styles/tokens/primitives.css`) — raw palette values only (e.g. `--color-violet-500`, `--color-teal-400`), no meaning attached.
-- **Semantic** (`styles/tokens/semantic.css`) — intent-based aliases over primitives (e.g. `--accent: var(--color-violet-500)`, `--energy-low: var(--color-teal-400)`). These names are the public API — `tailwind.config.js` points its theme colors at them, and existing global classes (`.card`, `.filter-pill`, `.btn-primary`, `.boon-tag`) consume them by name.
-- **Component** — CSS custom properties scoped to an individual component's SCSS Module, used only where a value is genuinely local (see `AddTodoForm.module.scss`'s `--accent` override, set per-option in JSX for the energy/timeslot segmented buttons).
+- **Primitive** (`styles/tokens/primitives.css`) — raw values only, no meaning attached: palette hues (e.g. `--color-violet-500`, `--color-teal-400`) and a rem-based font-size scale (e.g. `--font-size-xs`, `--font-size-base`).
+- **Semantic** (`styles/tokens/semantic.css`) — intent-based aliases over primitives (e.g. `--accent: var(--color-violet-500)`, `--energy-low: var(--color-teal-400)`, `--font-size-title: var(--font-size-base)`). These names are the public API — `tailwind.config.js` points its theme colors and font sizes at them, and existing global classes (`.card`, `.filter-pill`, `.btn-primary`, `.boon-tag`) consume them by name. Two semantic names can share one primitive without sharing meaning — e.g. `--font-size-heading` and `--font-size-icon` are both `--font-size-lg`, but rename independently since they describe different things.
+- **Component** — CSS custom properties scoped to a single use site, added only where a value is genuinely local. Two variants exist: scoped to a component's SCSS Module (`AddTodoForm.module.scss`'s `--accent`, set per-option in JSX for the energy/timeslot segmented buttons), and scoped to one instance of a _shared global class_ (`.filter-pill.active`'s `--pill-accent`/`-tint`/`-glow` and `.card`'s `--card-accent(-width)` in `index.css`, set inline by `FilterBar`'s energy pills and `TodoList`'s `TodoCard`). The latter exists specifically to let one instance override a shared rule's color without a CSS specificity fight — no `!important`, no new files.
 
-Tailwind utility classes handle most day-to-day styling (layout, spacing, colors via the token-backed theme); SCSS Modules are reserved for styling that doesn't fit cleanly into utility classes, such as the dynamic per-option active state on `AddTodoForm`'s segmented buttons.
+Tailwind utility classes handle most day-to-day styling (layout, spacing, colors and font sizes via the token-backed theme); SCSS Modules are reserved for styling that doesn't reduce cleanly to utility classes — dynamic per-instance state being the main case. `FilterBar.tsx`, `TodoList.tsx`, and `App.tsx` use token-backed Tailwind classes for color/type but still keep their structural/layout styling as inline `style` props; a future pass should finish migrating that structural styling into SCSS Modules following the `AddTodoForm` pattern.
 
 ---
 
