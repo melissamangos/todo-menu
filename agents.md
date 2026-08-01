@@ -10,7 +10,7 @@ Todo Menu is a full-stack wellness-focused to-do application. It is structured a
 
 | Layer   | Technology                                              |
 |---------|---------------------------------------------------------|
-| Frontend | React 18, TypeScript, Vite, Tailwind CSS              |
+| Frontend | React 18, TypeScript, Vite, Tailwind CSS, SCSS Modules |
 | Backend  | Node.js, Express, TypeScript                          |
 | Shared   | TypeScript types package consumed by both client and server |
 | Testing  | Vitest + Testing Library (client), Jest + ts-jest (server) |
@@ -37,10 +37,12 @@ todo-menu/
 └── client/                   # @todo-menu/client
     └── src/
         ├── App.tsx
-        ├── components/       # AddTodoForm, FilterBar, TodoList
+        ├── components/       # AddTodoForm (+ AddTodoForm.module.scss), FilterBar, TodoList
         ├── hooks/            # useTodos — data fetching + client-side filtering
         ├── services/         # todo.api.ts — typed fetch wrapper
-        ├── styles/           # index.css — full CSS design system
+        ├── styles/
+        │   ├── index.css         # Global styles + shared classes (.card, .btn-primary, etc.)
+        │   └── tokens/            # primitives.css → semantic.css design tokens
         └── __tests__/        # Vitest unit tests + fixtures
 ```
 
@@ -111,6 +113,14 @@ Routes → Controller → Service → Repository
 ### Client data layer
 `todo.api.ts` owns all fetch concerns. `useTodos.ts` owns React state and client-side filtering. Components only interact with the hook. This separation makes each layer independently unit-testable.
 
+### Design tokens: primitive → semantic → component
+Styling tokens are CSS custom properties in three layers:
+- **Primitive** (`styles/tokens/primitives.css`) — raw palette values (`--color-violet-500`, `--color-teal-400`, etc.), no meaning attached.
+- **Semantic** (`styles/tokens/semantic.css`) — intent-based aliases over primitives (`--accent`, `--energy-low`, `--bg-card`, etc.). These names are the stable public API: `tailwind.config.js` maps its theme colors to them, and shared global classes (`.card`, `.filter-pill`, `.btn-primary`, `.boon-tag`) consume them by name — renaming a semantic token means updating every consumer.
+- **Component** — CSS custom properties scoped to one component's SCSS Module, added only when a value is genuinely local. `AddTodoForm.module.scss` is the reference pattern: its `.option`/`.active` classes read a `--accent` custom property that's set inline per-option in JSX (energy buttons pass their own hue; timeslot buttons omit it and fall back to the semantic `--violet`).
+
+Tailwind utility classes (wired to the token-backed theme) handle layout, spacing, and most coloring. SCSS Modules are reserved for styling that doesn't reduce cleanly to utility classes — dynamic per-instance state being the main case. `FilterBar.tsx` and `TodoList.tsx` still use the pre-token inline-style approach; a future pass should migrate them following the `AddTodoForm` pattern.
+
 ---
 
 ## Running the project
@@ -129,8 +139,8 @@ The Vite dev server proxies `/api` requests to `http://localhost:3001`, so no CO
 ## Test coverage
 
 ### Client (Vitest + Testing Library)
-- **`useTodos.test.ts`** — 30 tests covering sort order, energy filter (all values + empty result), timeslot filter (all values + empty result), composed filters, `isFiltered` flag, `clearFilters`, CRUD state updates, and API error handling
-- **`AddTodoForm.test.tsx`** — 22 tests covering collapsed/expanded state, all 10 boons rendered, default values, field interactions, boon toggle/multi-select, validation (blank/whitespace), submission DTO shape, form reset, and cancel behaviour
+- **`App.test.tsx`** — 13 UI integration tests that render the real `App` tree and drive it via `userEvent` (clicks/typing), mocking only the API layer: sort order, energy/timeslot filters (incl. empty result and composed filters), clear filters, create flow, delete flow, and error handling
+- **`AddTodoForm.test.tsx`** — 20 tests covering collapsed/expanded state, all 10 boons rendered, default submission values, field interactions, boon toggle/multi-select, validation (blank/whitespace), submission DTO shape, form reset, and cancel behaviour — assertions go through user actions and outcomes (submitted DTOs, role-based presence), not inline styles or copy
 - **`fixtures.ts`** — shared stable todo objects covering all energy levels and timeslots for use across test files
 
 ### Server (Jest + ts-jest)
