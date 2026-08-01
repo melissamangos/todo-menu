@@ -59,6 +59,12 @@ body::before {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
   border-radius: 16px;
+  /* --card-accent(-width) let a specific card (e.g. a TodoCard) tint its
+     left edge without fighting this shared rule's specificity — unset,
+     they fall back to the plain border above, so most .card usages
+     (like AddTodoForm's wrapper) are untouched. */
+  border-left-width: var(--card-accent-width, 1px);
+  border-left-color: var(--card-accent, var(--border-subtle));
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease;
@@ -66,6 +72,7 @@ body::before {
 
 .card:hover {
   border-color: var(--border-muted);
+  border-left-color: var(--card-accent, var(--border-muted));
   box-shadow:
     0 0 0 1px rgba(139, 92, 246, 0.08),
     0 8px 32px rgba(0, 0, 0, 0.3);
@@ -106,10 +113,13 @@ body::before {
   background: var(--violet-dim);
 }
 .filter-pill.active {
-  border-color: var(--violet);
-  color: white;
-  background: var(--violet-dim);
-  box-shadow: 0 0 12px rgba(139, 92, 246, 0.2);
+  /* --pill-accent/-tint/-glow let a specific pill (e.g. an energy pill)
+     tint itself without fighting this shared rule's specificity — unset,
+     they fall back to the plain violet "active" look below. */
+  border-color: var(--pill-accent, var(--violet));
+  color: var(--pill-accent, white);
+  background: var(--pill-tint, var(--violet-dim));
+  box-shadow: 0 0 12px var(--pill-glow, rgba(139, 92, 246, 0.2));
 }
 
 /* Input/select base */

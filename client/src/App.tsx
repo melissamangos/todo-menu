@@ -34,12 +34,12 @@ export default function App() {
         {/* Header */}
         <header style={{ marginBottom: 36 }}>
           <p
+            className="text-accent-light"
             style={{
               fontSize: 11,
               fontWeight: 600,
               letterSpacing: "0.18em",
               textTransform: "uppercase",
-              color: "var(--violet-light)",
               marginBottom: 8,
             }}
           >
@@ -57,7 +57,7 @@ export default function App() {
           >
             Today's Menu
           </h1>
-          <p style={{ fontSize: 14, color: "var(--slate-muted)" }}>
+          <p className="text-ink-faint" style={{ fontSize: 14 }}>
             {todos.length} {todos.length === 1 ? "item" : "items"} in your practice
           </p>
         </header>
@@ -81,9 +81,9 @@ export default function App() {
         {/* List */}
         {isLoading && (
           <p
+            className="text-ink-faint"
             style={{
               textAlign: "center",
-              color: "var(--slate-muted)",
               padding: "40px 0",
               fontSize: 14,
             }}
@@ -92,7 +92,10 @@ export default function App() {
           </p>
         )}
         {error && (
-          <p style={{ textAlign: "center", color: "#f472b6", fontSize: 13, padding: "16px 0" }}>
+          <p
+            className="text-energy-high"
+            style={{ textAlign: "center", fontSize: 13, padding: "16px 0" }}
+          >
             {error}
           </p>
         )}
