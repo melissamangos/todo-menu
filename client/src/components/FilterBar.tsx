@@ -10,20 +10,27 @@ interface Props {
 }
 
 const ENERGY_PILLS: { value: EnergyCost | "all"; label: string; color?: string }[] = [
-  { value: "all",    label: "All energy" },
-  { value: "low",    label: "Low",    color: "var(--energy-low)"  },
-  { value: "medium", label: "Medium", color: "var(--energy-med)"  },
-  { value: "high",   label: "High",   color: "var(--energy-high)" },
+  { value: "all", label: "All energy" },
+  { value: "low", label: "Low", color: "var(--energy-low)" },
+  { value: "medium", label: "Medium", color: "var(--energy-med)" },
+  { value: "high", label: "High", color: "var(--energy-high)" },
 ];
 
 const SLOT_PILLS: { value: Timeslot | "all"; label: string }[] = [
   { value: "all", label: "All slots" },
-  { value: "am",  label: "☀️ Morning" },
-  { value: "pm",  label: "🌤️ Afternoon" },
+  { value: "am", label: "☀️ Morning" },
+  { value: "pm", label: "🌤️ Afternoon" },
   { value: "eve", label: "🌙 Evening" },
 ];
 
-export function FilterBar({ filters, isFiltered, totalCount, filteredCount, onSetFilters, onClear }: Props) {
+export function FilterBar({
+  filters,
+  isFiltered,
+  totalCount,
+  filteredCount,
+  onSetFilters,
+  onClear,
+}: Props) {
   return (
     <div className="mb-5">
       <p className="section-label mb-3">Filter</p>
@@ -37,23 +44,29 @@ export function FilterBar({ filters, isFiltered, totalCount, filteredCount, onSe
               key={p.value}
               onClick={() => onSetFilters({ energyCost: p.value })}
               className={`filter-pill${isActive ? " active" : ""}`}
-              style={isActive && p.color ? {
-                borderColor: p.color,
-                color: p.color,
-                background: `color-mix(in srgb, ${p.color} 12%, transparent)`,
-                boxShadow: `0 0 10px color-mix(in srgb, ${p.color} 18%, transparent)`,
-              } : {}}
+              style={
+                isActive && p.color
+                  ? {
+                      borderColor: p.color,
+                      color: p.color,
+                      background: `color-mix(in srgb, ${p.color} 12%, transparent)`,
+                      boxShadow: `0 0 10px color-mix(in srgb, ${p.color} 18%, transparent)`,
+                    }
+                  : {}
+              }
             >
               {p.color && (
-                <span style={{
-                  display: "inline-block",
-                  width: 6,
-                  height: 6,
-                  borderRadius: "50%",
-                  background: p.color,
-                  marginRight: 5,
-                  verticalAlign: "middle",
-                }} />
+                <span
+                  style={{
+                    display: "inline-block",
+                    width: 6,
+                    height: 6,
+                    borderRadius: "50%",
+                    background: p.color,
+                    marginRight: 5,
+                    verticalAlign: "middle",
+                  }}
+                />
               )}
               {p.label}
             </button>

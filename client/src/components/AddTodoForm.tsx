@@ -7,14 +7,14 @@ interface Props {
 }
 
 const ENERGY_OPTIONS: { value: EnergyCost; label: string; color: string }[] = [
-  { value: "low",    label: "Low",    color: "var(--energy-low)"  },
-  { value: "medium", label: "Medium", color: "var(--energy-med)"  },
-  { value: "high",   label: "High",   color: "var(--energy-high)" },
+  { value: "low", label: "Low", color: "var(--energy-low)" },
+  { value: "medium", label: "Medium", color: "var(--energy-med)" },
+  { value: "high", label: "High", color: "var(--energy-high)" },
 ];
 
 const SLOT_OPTIONS: { value: Timeslot; label: string; icon: string }[] = [
-  { value: "am",  label: "Morning", icon: "☀️" },
-  { value: "pm",  label: "Afternoon", icon: "🌤️" },
+  { value: "am", label: "Morning", icon: "☀️" },
+  { value: "pm", label: "Afternoon", icon: "🌤️" },
   { value: "eve", label: "Evening", icon: "🌙" },
 ];
 
@@ -31,7 +31,7 @@ export function AddTodoForm({ onAdd }: Props) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleBoon = (b: Boon) =>
-    setBoons((prev) => prev.includes(b) ? prev.filter((x) => x !== b) : [...prev, b]);
+    setBoons((prev) => (prev.includes(b) ? prev.filter((x) => x !== b) : [...prev, b]));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -95,7 +95,8 @@ export function AddTodoForm({ onAdd }: Props) {
                     onClick={() => setTimeslot(opt.value)}
                     className={optionClass(timeslot === opt.value)}
                   >
-                    <span className="mr-1">{opt.icon}</span>{opt.label}
+                    <span className="mr-1">{opt.icon}</span>
+                    {opt.label}
                   </button>
                 ))}
               </div>
@@ -103,7 +104,12 @@ export function AddTodoForm({ onAdd }: Props) {
 
             {/* Boons */}
             <div className="mb-5">
-              <p className="section-label mb-2">Boons {boons.length > 0 && <span className="text-accent-light ml-1.5">({boons.length})</span>}</p>
+              <p className="section-label mb-2">
+                Boons{" "}
+                {boons.length > 0 && (
+                  <span className="text-accent-light ml-1.5">({boons.length})</span>
+                )}
+              </p>
               <div className="flex flex-wrap gap-1.5">
                 {ALL_BOONS.map((b) => (
                   <button
@@ -121,7 +127,11 @@ export function AddTodoForm({ onAdd }: Props) {
             <div className="flex gap-2">
               <button
                 type="button"
-                onClick={() => { setIsExpanded(false); setName(""); setBoons([]); }}
+                onClick={() => {
+                  setIsExpanded(false);
+                  setName("");
+                  setBoons([]);
+                }}
                 className="rounded-[10px] border border-line px-4 py-2.5 bg-transparent text-ink-faint font-body text-[13px] cursor-pointer"
               >
                 Cancel
