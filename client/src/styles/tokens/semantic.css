@@ -27,6 +27,9 @@
   --slate-light: var(--color-slate-400);
   --slate-muted: var(--color-slate-500);
   --text-primary: var(--color-slate-100);
+  --text-heading: var(
+    --color-slate-50
+  ); /* brighter than --text-primary, for large display headings */
 
   /* Energy cost */
   --energy-low: var(--color-teal-400);

@@ -1,0 +1,5 @@
+// A single one-off value that doesn't reduce cleanly to a Tailwind utility
+// class — everything else on TodoCard's name text is a plain Tailwind class.
+.cardName {
+  line-height: 1.3;
+}

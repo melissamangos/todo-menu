@@ -1,4 +1,5 @@
 import { Todo } from "@todo-menu/shared";
+import styles from "./TodoList.module.scss";
 
 interface Props {
   todos: Todo[];
@@ -47,26 +48,9 @@ function groupByEnergy(todos: Todo[]): { key: Todo["energyCost"]; items: Todo[] 
 export function TodoList({ todos, onDelete }: Props) {
   if (todos.length === 0) {
     return (
-      <div
-        className="text-ink-faint"
-        style={{
-          textAlign: "center",
-          padding: "48px 0",
-        }}
-      >
-        <div className="text-icon-lg" style={{ marginBottom: 12 }}>
-          ✦
-        </div>
-        <p
-          className="text-ink-muted text-heading"
-          style={{
-            fontFamily: "var(--font-display)",
-            fontStyle: "italic",
-            marginBottom: 4,
-          }}
-        >
-          Your menu is empty
-        </p>
+      <div className="text-ink-faint text-center py-12">
+        <div className="text-icon-lg mb-3">✦</div>
+        <p className="text-ink-muted text-heading font-display italic mb-1">Your menu is empty</p>
         <p className="text-body">Add your first item above to get started.</p>
       </div>
     );
@@ -75,45 +59,26 @@ export function TodoList({ todos, onDelete }: Props) {
   const groups = groupByEnergy(todos);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+    <div className="flex flex-col gap-5">
       {groups.map(({ key, items }) => {
         const meta = ENERGY_META[key];
         return (
           <div key={key}>
             {/* Group header */}
             <div className="energy-group-header">
+              <span className={`inline-block w-2 h-2 rounded-full shrink-0 ${meta.bgClass}`} />
               <span
-                className={meta.bgClass}
-                style={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: "50%",
-                  display: "inline-block",
-                  flexShrink: 0,
-                }}
-              />
-              <span
-                className={`${meta.textClass} text-label`}
-                style={{
-                  fontWeight: 600,
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                }}
+                className={`${meta.textClass} text-label font-semibold uppercase tracking-widest`}
               >
                 {meta.label}
               </span>
-              <span
-                className="text-ink-faint text-caption"
-                style={{
-                  marginLeft: "auto",
-                }}
-              >
+              <span className="text-ink-faint text-caption ml-auto">
                 {items.length} {items.length === 1 ? "item" : "items"}
               </span>
             </div>
 
             {/* Cards */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            <div className="flex flex-col gap-2">
               {items.map((todo, i) => (
                 <TodoCard key={todo.id} todo={todo} index={i} onDelete={onDelete} />
               ))}
@@ -139,38 +104,26 @@ function TodoCard({
 
   return (
     <div
-      className="card animate-in"
+      className="card animate-in px-4 py-3.5 rounded-l-none rounded-r-xl"
       // Feeds .card's --card-accent(-width) custom properties (see
       // index.css) — lets this specific card tint its left edge without a
-      // specificity fight against that shared rule.
+      // specificity fight against that shared rule. animationDelay is
+      // genuinely per-instance and has no Tailwind equivalent.
       style={
         {
           animationDelay: `${index * 40}ms`,
-          padding: "14px 16px",
-          borderRadius: "0 12px 12px 0",
-          borderTopLeftRadius: 0,
-          borderBottomLeftRadius: 0,
           "--card-accent": energy.color,
           "--card-accent-width": "2px",
         } as React.CSSProperties
       }
     >
-      <div style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+      <div className="flex items-start gap-3">
         {/* Content */}
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <p
-            className="text-ink text-title"
-            style={{
-              fontFamily: "var(--font-display)",
-              marginBottom: 8,
-              lineHeight: 1.3,
-            }}
-          >
-            {todo.name}
-          </p>
+        <div className="flex-1 min-w-0">
+          <p className={`text-ink text-title font-display mb-2 ${styles.cardName}`}>{todo.name}</p>
 
           {/* Chips row */}
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+          <div className="flex flex-wrap gap-1.5">
             {/* Timeslot */}
             <span className="chip bg-elevated text-ink-muted border border-line">
               {slot.icon} {slot.label}
@@ -180,10 +133,7 @@ function TodoCard({
             {todo.boons.map((b) => (
               <span
                 key={b}
-                className="chip bg-accent-dim text-accent-light"
-                style={{
-                  border: "1px solid rgba(139,92,246,0.2)",
-                }}
+                className="chip bg-accent-dim text-accent-light border border-line-muted"
               >
                 {b}
               </span>
@@ -195,16 +145,7 @@ function TodoCard({
         <button
           onClick={() => onDelete(todo.id)}
           aria-label="Delete"
-          className="text-ink-faint hover:text-energy-high transition-colors text-icon"
-          style={{
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            lineHeight: 1,
-            padding: "2px 4px",
-            borderRadius: 6,
-            flexShrink: 0,
-          }}
+          className="text-ink-faint hover:text-energy-high transition-colors text-icon bg-transparent border-0 cursor-pointer leading-none px-1 py-0.5 rounded-md shrink-0"
         >
           ×
         </button>
